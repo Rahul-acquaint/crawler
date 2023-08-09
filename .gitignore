@@ -1,0 +1,12 @@
+### Python artifacts
+*.pyc
+/media/*
+.vscode
+**/migrations/**
+
+staticfiles/
+.env
+
+.idea/*
+venv/
+__pycache__/
