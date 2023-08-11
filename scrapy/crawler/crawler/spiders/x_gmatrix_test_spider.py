@@ -3,7 +3,7 @@ import requests
 import logging
 from crawler import configs
 from crawler.apis import APIEndpoints
-from crawler.models.xeno_gtmetrix_test import GTMetrixModel
+from crawler.models.xeno_gtmetrix_test import GTMetrixModel, GTMetrixTestModel
 
 class GTMatrixTestSpider(scrapy.Spider):
 
@@ -16,7 +16,7 @@ class GTMatrixTestSpider(scrapy.Spider):
         url = self.url
         yield scrapy.Request(url=url)
 
-    def store_xano_test_data(self, inputs:dict, maindb_id) -> None:
+    def store_xano_test_data(self, inputs:dict, maindb_id, test_site) -> None:
         data={
             "gtmetrix_grade" : inputs.get("gtmetrix_grade"),
             "performance_score" : inputs.get("performance_score"),
@@ -28,19 +28,22 @@ class GTMatrixTestSpider(scrapy.Spider):
         }
 
         gtmatrix_model = GTMetrixModel()
-        gtmatrix_model.add(data)
+        gtmatrix_test_model =GTMetrixTestModel()
+        gtmatrix_model.add(data)      
+        test_site["is_complete"]  =True
+        gtmatrix_test_model.update(pk=test_site.get("id"), data=test_site)
     
-    def check_start(self, test_url, maindb_id): 
+    def check_start(self, test_url, maindb_id, test_site): 
         auth = (self.GTMETRIX_API_KEY, '')
         response = requests.get(test_url, auth=auth)
         if  response.status_code == 200:
             response_data = response.json()
             attributes =  response_data.get("data", {}).get("attributes", {})
-            self.store_xano_test_data(attributes, maindb_id)
+            self.store_xano_test_data(attributes, maindb_id, test_site)
 
 
     def parse(self, respose):
-        test_sites= respose.json()
+        test_sites = respose.json()
         for test_site in test_sites:
-            self.check_start(test_site.get("link"), test_site.get("maindb_id"))
+            self.check_start(test_site.get("link"), test_site.get("maindb_id"), test_site)
             
