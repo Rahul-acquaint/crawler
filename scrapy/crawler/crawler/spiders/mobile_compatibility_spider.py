@@ -16,4 +16,3 @@ class MobileCompatibilitySpider(scrapy.Spider):
             print(f"{response.url} is mobile compatible.")
         else:
             print(f"{response.url} is not mobile compatible.")
-
