@@ -1,9 +1,11 @@
 import scrapy
 import requests
-import logging
+
 from crawler import configs
 from crawler.apis import APIEndpoints
-from crawler.models.xeno_gtmetrix_test import GTMetrixModel, GTMetrixTestModel
+from crawler.models.xano_gtmetrix_test import XanoGTMetrixTestModel
+from crawler.models.xano_gtmetrix import XanoGTMetrixModel
+from crawler.models.gt_metrix import GTMetrixTestModel
 
 class GTMatrixTestSpider(scrapy.Spider):
 
@@ -27,17 +29,17 @@ class GTMatrixTestSpider(scrapy.Spider):
             "maindb_id" : maindb_id,
         }
 
-        gtmatrix_model = GTMetrixModel()
-        gtmatrix_test_model =GTMetrixTestModel()
+        gtmatrix_model = XanoGTMetrixModel()
+        gtmatrix_test_model =XanoGTMetrixTestModel()
         gtmatrix_model.add(data)      
         test_site["is_complete"]  =True
         gtmatrix_test_model.update(pk=test_site.get("id"), data=test_site)
     
     def check_start(self, test_url, maindb_id, test_site): 
-        auth = (self.GTMETRIX_API_KEY, '')
-        response = requests.get(test_url, auth=auth)
-        if  response.status_code == 200:
-            response_data = response.json()
+        gt_metrixtest_model = GTMetrixTestModel()
+        gt_metrixtest_model.url=test_url
+        response_data = gt_metrixtest_model.get()
+        if  response_data:
             attributes =  response_data.get("data", {}).get("attributes", {})
             self.store_xano_test_data(attributes, maindb_id, test_site)
 
