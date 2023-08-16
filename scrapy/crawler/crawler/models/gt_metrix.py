@@ -24,7 +24,7 @@ class GTMetrixModel(AbstractGTMatrix, AbstractModel):
         data = response.json()
         if response.status_code == 202:
             return data
-
+            
         Debugger.error("error ", data, response.url)
 
         return None

@@ -46,6 +46,7 @@ class GTMatrixTestSpider(scrapy.Spider):
 
     def parse(self, respose):
         test_sites = respose.json()
+        test_sites = test_sites.get("items")
         for test_site in test_sites:
             self.check_start(test_site.get("link"), test_site.get("maindb_id"), test_site)
             

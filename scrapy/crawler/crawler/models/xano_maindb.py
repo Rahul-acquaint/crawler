@@ -9,15 +9,15 @@ class XanoMainDBUpdateModel(AbstractModel):
 
     def update_timespamp(self, data, pk):
         datetime_now = datetime.now()
-        timestamp = datetime.timestamp(datetime_now)
-        data["updated_at"]=timestamp
-
+        format_string = "%Y-%m-%dT%H:%M:%S%z"
+        parsed_datetime = datetime.strftime(datetime_now, format_string)
+        data["updated_at"]=parsed_datetime
         return self.update(data, pk)
 
     def update(self, data, pk):
         self.pk=pk
         response = self.post(data)
-        data = response.json
+        data = response.json()
         if response.status_code == 200:...
         else:
             Debugger.error("error ", data)

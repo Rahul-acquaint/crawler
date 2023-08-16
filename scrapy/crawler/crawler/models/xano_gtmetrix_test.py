@@ -12,10 +12,11 @@ class XanoGTMetrixTestModel(AbstractModel):
     def update(self, pk, data):
         self.pk = pk
         response = super().post(data)
-        data = response.json
+        data = response.json()
         if response.status_code == 200:...
         else:
             Debugger.error("error ", data, response.url)
+        
         return data
         
     
@@ -30,8 +31,10 @@ class XanoGTMetrixTestPostModel(AbstractModel):
 
     def post(self, data):
         response = super().post(data)
+        response_data = response.json()
         if response.status_code == 200:...
         else:
-            Debugger.error("error ", data, response.url)
-        return data
+            Debugger.error("error ", response_data, response.url)
+        
+        return response_data
         
