@@ -7,7 +7,7 @@ from crawler.debugger import Debugger
 
 class XanoGTMetrixTestModel(AbstractModel):
 
-    url = APIEndpoints.x_gtmatrix_test
+    url = APIEndpoints.x_gtmatrix
 
     def update(self, pk, data):
         self.pk = pk
@@ -27,7 +27,7 @@ class XanoGTMetrixTestModel(AbstractModel):
 
 class XanoGTMetrixTestPostModel(AbstractModel):
 
-    url = APIEndpoints.x_gtmatrix_test
+    url = APIEndpoints.x_gtmatrix
 
     def post(self, data):
         response = super().post(data)
